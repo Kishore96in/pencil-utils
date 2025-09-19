@@ -1,0 +1,70 @@
+#!/bin/bash
+
+help='''Wrapper to run commands using a particular branch of the Pencil code. This branch should be present in the Git repository at $PENCIL_HOME. This scripts assume $PENCIL_HOME/sourceme.sh has NOT been sourced in the current shell.
+
+Example usage:
+    pc_env --branch gputestv6 pc_run
+    
+    pc_isolated-test --branch master --repo "file:///home/kishore/pencil-code" --auto-test-options "--max-level=1 --time-limit=5m"
+
+Options:
+    -h,--help               Show this help
+    -b,--branch             Branch to test.
+                            Default: master
+'''
+
+# BEGIN option parsing
+#https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash/29754866#29754866
+set -o errexit -o pipefail -o noclobber -o nounset
+
+LONGOPTS=branch:,help
+OPTIONS=b:h
+
+PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@") || exit 2
+eval set -- "$PARSED"
+
+branchname=master
+while true; do
+    case "$1" in
+        -b|--branch)
+            branchname=$2
+            shift 2
+            ;;
+        -h|--help)
+            echo "$help"
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Error in parsing options"
+            exit 3
+            ;;
+    esac
+done
+# END option parsing
+
+latest_commit=$(git -C "$PENCIL_HOME" rev-parse "$branchname")
+sanitized_repo_name=$(echo $PENCIL_HOME | tr -d ':/') #remove characters which would cause problems in folder names.
+tmpdir="/var/tmp/pc_env/$USER/$sanitized_repo_name-$branchname-$latest_commit"
+
+if ! test -e "$tmpdir"; then
+    git clone --depth 1 --branch "$branchname" file://"$PENCIL_HOME" "$tmpdir"
+fi
+
+set +o nounset #Otherwise there is an error in sourceme.sh
+export PENCIL_HOME="$tmpdir"
+_sourceme_quiet=1
+source "$PENCIL_HOME"/sourceme.sh
+unset _sourceme_quiet
+
+echo "----------------"
+echo "Pencil version info:"
+echo -e "\tbranch: $(git -C $PENCIL_HOME branch --show-current)"
+echo -e "\tcommit: $(git -C $PENCIL_HOME rev-parse HEAD)"
+echo "----------------"
+
+#Treat all the remaining arguments as a command string and execute.
+"$@"
