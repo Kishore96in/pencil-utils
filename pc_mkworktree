@@ -6,7 +6,7 @@ import subprocess
 import pathlib
 
 parser = argparse.ArgumentParser(
-	description = "Create a new worktree, checking out a particular local branch of the Pencil code",
+	description = "Create a new worktree, checking out a particular local branch of the Pencil code. $PENCIL_HOME is considered the source repository.",
 	formatter_class = argparse.ArgumentDefaultsHelpFormatter,
 	# epilog = "Example: %(prog)s  gputestv6",
 	)
