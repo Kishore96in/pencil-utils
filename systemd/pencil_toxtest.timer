@@ -1,0 +1,12 @@
+[Unit]
+Description=Run pencil python tests daily
+
+[Timer]
+#TODO: edit path and time below as required
+Unit=pencil_toxtest@-path-to-output-directory.service
+OnCalendar=*-*-* 13:00:00
+RandomizedDelaySec=5m
+Persistent=True
+
+[Install]
+WantedBy=timers.target
