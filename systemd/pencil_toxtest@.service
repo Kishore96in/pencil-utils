@@ -3,7 +3,6 @@ Description=Pencil-code Python module tests
 
 [Service]
 Type=oneshot
-WorkingDirectory=%I
 StandardOutput=file:%I/report.txt
 EnvironmentFile=%I/pencil_test.conf
 
@@ -14,14 +13,7 @@ ExecStartPre=git -C ${pencil_home} reset --hard HEAD
 ExecStartPre=git -C ${pencil_home} pull
 ExecStartPre=git -C ${pencil_home} clean -xfq
 
-ExecStartPre=echo "---- TEST RESULTS FOLLOW ----"
 # Store tox's environments in ${tmpdir} so that we don't run into issues with virtualenvs being dynamically linked to outdated libraries.
 # NOTE: integration tests fail if sourceme.sh has not been run.
-ExecStart=-bash -c "cd ${pencil_home}/python/tests && \
-	source ${pencil_home}/sourceme.sh && \
-	tox --workdir ${tmpdir}/%u/%N"
+ExecStart=bash -c "${pencil_home}/python/tests/test-python-modules.py --full --outputdir=%I"
 
-#Expose the code coverage report
-#NOTE: these should run regardless of whether tox succeeded above.
-ExecStartPost=rm -rf %I/code_coverage
-ExecStartPost=cp -r ${pencil_home}/python/tests/htmlcov %I/code_coverage
