@@ -47,8 +47,8 @@ done
 # END option parsing
 
 latest_commit=$(git -C "$PENCIL_HOME" rev-parse "$branchname")
-sanitized_repo_name=$(echo $PENCIL_HOME | tr -d ':/') #remove characters which would cause problems in folder names.
-tmpdir="/var/tmp/pc_env/$USER/$sanitized_repo_name-$branchname-$latest_commit"
+sanitized_repo_name=$(echo $PENCIL_HOME | tr -d ':.') #remove characters which would cause problems in folder names.
+tmpdir="/var/tmp/pc_env/$USER/$sanitized_repo_name/$branchname/$latest_commit"
 
 if ! test -e "$tmpdir"; then
     git clone --depth 1 --branch "$branchname" file://"$PENCIL_HOME" "$tmpdir"
