@@ -6,7 +6,7 @@ Type=oneshot
 StandardOutput=file:%I/report.txt
 EnvironmentFile=%I/pencil_test.conf
 
-ExecStartPre=bash -c "> report.txt"
+ExecStartPre=bash -c "> %I/report.txt"
 
 ExecStartPre=git -C ${pencil_home} stash
 ExecStartPre=git -C ${pencil_home} reset --hard HEAD
