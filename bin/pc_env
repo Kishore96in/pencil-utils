@@ -3,9 +3,8 @@
 help='''Wrapper to run commands using a particular branch of the Pencil code. This branch should be present in the Git repository at $PENCIL_HOME. This scripts assume $PENCIL_HOME/sourceme.sh has NOT been sourced in the current shell.
 
 Example usage:
-    pc_env --branch gputestv6 pc_run
-    
-    pc_isolated-test --branch master --repo "file:///home/kishore/pencil-code" --auto-test-options "--max-level=1 --time-limit=5m"
+    pc_env --branch gputestv6 -- pc_run #run single command
+    pc_env --branch gputestv6 -- bash --norc #interactive shell
 
 Options:
     -h,--help               Show this help
