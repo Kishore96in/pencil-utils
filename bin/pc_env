@@ -53,7 +53,7 @@ if ! test -e "$tmpdir"; then
     git clone --depth 1 --branch "$branchname" file://"$PENCIL_HOME" "$tmpdir"
 fi
 
-set +o nounset #Otherwise there is an error in sourceme.sh
+set +o nounset +o pipefail #Otherwise there are errors in sourceme.sh
 export PENCIL_HOME="$tmpdir"
 _sourceme_quiet=1
 source "$PENCIL_HOME"/sourceme.sh
