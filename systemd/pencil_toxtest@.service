@@ -11,7 +11,7 @@ ExecStartPre=bash -c "> %I/report.txt"
 ExecStartPre=git -C ${pencil_home} stash
 ExecStartPre=git -C ${pencil_home} reset --hard HEAD
 ExecStartPre=git -C ${pencil_home} pull
-ExecStartPre=git -C ${pencil_home} clean -xfq
+ExecStartPre=git -C ${pencil_home} clean -xfq 'samples/*/data/*' 'samples/*/tests/*.out'
 
 # Store tox's environments in ${tmpdir} so that we don't run into issues with virtualenvs being dynamically linked to outdated libraries.
 # NOTE: integration tests fail if sourceme.sh has not been run.
