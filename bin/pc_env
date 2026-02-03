@@ -70,6 +70,7 @@ tmpdir="$tmp_loc/$USER/$sanitized_repo_name/$branchname/$latest_commit"
 
 if ! test -e "$tmpdir"; then
     git clone --depth 1 --branch "$branchname" file://"$PENCIL_HOME" "$tmpdir"
+    git -C "$tmpdir" config set advice.detachedHead false
     git -C "$tmpdir" checkout "$latest_commit"
 fi
 
