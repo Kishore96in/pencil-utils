@@ -70,7 +70,7 @@ tmpdir="$tmp_loc/$USER/$sanitized_repo_name/$branchname/$latest_commit"
 
 if ! test -e "$tmpdir"; then
     git clone --depth 1 --branch "$branchname" file://"$PENCIL_HOME" "$tmpdir"
-    git checkout "$latest_commit"
+    git -C "$tmpdir" checkout "$latest_commit"
 fi
 
 set +o nounset +o pipefail #Otherwise there are errors in sourceme.sh
