@@ -9,12 +9,14 @@ Example usage:
 Options:
     -h,--help               Show this help
     -b,--branch             Branch to test.
+    -c,--commit             Check out a particular commit of the target branch.
                             Default: master
 '''
 
 #Defaults
 tmp_loc="/var/tmp/pc_env"
 branchname=master
+commit=""
 
 #The configuration file is just a shell script in which variables can be defined.
 config_file="$HOME/.config/pc_env"
@@ -26,8 +28,8 @@ fi
 #https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash/29754866#29754866
 set -o errexit -o pipefail -o noclobber -o nounset
 
-LONGOPTS=branch:,help
-OPTIONS=b:h
+LONGOPTS=branch:,help,commit:
+OPTIONS=b:hc:
 
 PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@") || exit 2
 eval set -- "$PARSED"
@@ -36,6 +38,10 @@ while true; do
     case "$1" in
         -b|--branch)
             branchname=$2
+            shift 2
+            ;;
+        -c|--commit)
+            commit=$2
             shift 2
             ;;
         -h|--help)
@@ -54,7 +60,11 @@ while true; do
 done
 # END option parsing
 
-latest_commit=$(git -C "$PENCIL_HOME" rev-parse "$branchname")
+if test -z "$commit"; then
+    latest_commit=$(git -C "$PENCIL_HOME" rev-parse "$branchname")
+else
+    latest_commit="$commit"
+fi
 sanitized_repo_name=$(echo $PENCIL_HOME | tr -d ':.') #remove characters which would cause problems in folder names.
 tmpdir="$tmp_loc/$USER/$sanitized_repo_name/$branchname/$latest_commit"
 
