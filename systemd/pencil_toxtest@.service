@@ -15,5 +15,5 @@ ExecStartPre=git -C ${pencil_home} clean -xfq 'samples/*/data/*' 'samples/*/test
 
 # Store tox's environments in ${tmpdir} so that we don't run into issues with virtualenvs being dynamically linked to outdated libraries.
 # NOTE: integration tests fail if sourceme.sh has not been run.
-ExecStart=bash -c "${pencil_home}/python/tests/test-python-modules.py --full --outputdir=%I"
+ExecStart=bash -c "${pencil_home}/python/tests/test-python-modules.py --tox --coverage --outputdir=%I"
 
