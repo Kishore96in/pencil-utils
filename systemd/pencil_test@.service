@@ -12,11 +12,9 @@ ExecStartPre=bash -c 'if test -e index.html; then mv index.html ../${output_dir_
 
 ExecStart=bash -c '${pencil_home}/bin/pencil-test \
 	--pencil-home=${pencil_home} \
-	-N 15 --update --html --clean --local --use-pc_auto-test \
+	-N 15 --update --html --clean --local --use-pc_auto-test --coverage \
 	--auto-test-options="--max-level=3 --script-tests=python --time-limit=5m \
-		--coverage --auto-clean" \
-	--log-dir=. \
-	--previous-dir=../${output_dir_prev_name} \
+		--auto-clean" \
+	--log-dir=. --previous-dir=../${output_dir_prev_name} \
 	> index.html'
 
-ExecStartPost=bash -c '${pencil_home}/bin/pc_codecov --pencil-home ${pencil_home} --output-dir lcov_html'
