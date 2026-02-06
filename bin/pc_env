@@ -63,15 +63,17 @@ done
 if test -z "$commit"; then
     latest_commit=$(git -C "$PENCIL_HOME" rev-parse "$branchname")
 else
+    if ! git merge-base --is-ancestor "$commit" "$branchname"; then
+        echo "Error: commit $commit is not contained in $branchname"
+        exit 4
+    fi
     latest_commit="$commit"
 fi
 sanitized_repo_name=$(echo $PENCIL_HOME | tr -d ':.') #remove characters which would cause problems in folder names.
 tmpdir="$tmp_loc/$USER/$sanitized_repo_name/$branchname/$latest_commit"
 
 if ! test -e "$tmpdir"; then
-    git clone --depth 1 --branch "$branchname" file://"$PENCIL_HOME" "$tmpdir"
-    git -C "$tmpdir" config set advice.detachedHead false
-    git -C "$tmpdir" checkout "$latest_commit"
+    git clone --depth 1 --revision "$latest_commit" file://"$PENCIL_HOME" "$tmpdir"
 fi
 
 set +o nounset +o pipefail #Otherwise there are errors in sourceme.sh
@@ -82,7 +84,7 @@ unset _sourceme_quiet
 
 echo "----------------"
 echo "Pencil version info:"
-echo -e "\tbranch: $(git -C $PENCIL_HOME branch --show-current)"
+echo -e "\tbranch: $branchname"
 echo -e "\tcommit: $(git -C $PENCIL_HOME rev-parse HEAD)"
 echo "----------------"
 
