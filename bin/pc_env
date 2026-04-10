@@ -63,7 +63,7 @@ done
 if test -z "$commit"; then
     latest_commit=$(git -C "$PENCIL_HOME" rev-parse "$branchname")
 else
-    if ! git merge-base --is-ancestor "$commit" "$branchname"; then
+    if ! git -C "$PENCIL_HOME" merge-base --is-ancestor "$commit" "$branchname"; then
         echo "Error: commit $commit is not contained in $branchname"
         exit 4
     fi
