@@ -60,12 +60,10 @@ while true; do
 done
 # END option parsing
 
-_gitcmd="git -C $PENCIL_HOME"
-
 if test -z "$commit"; then
-    latest_commit=$($_gitcmd rev-parse "$branchname")
+    latest_commit=$(git -C "$PENCIL_HOME" rev-parse "$branchname")
 else
-    if ! $_gitcmd merge-base --is-ancestor "$commit" "$branchname"; then
+    if ! git merge-base --is-ancestor "$commit" "$branchname"; then
         echo "Error: commit $commit is not contained in $branchname"
         exit 4
     fi
@@ -87,7 +85,7 @@ unset _sourceme_quiet
 echo "----------------"
 echo "Pencil version info:"
 echo -e "\tbranch: $branchname"
-echo -e "\tcommit: $($_gitcmd rev-parse HEAD)"
+echo -e "\tcommit: $(git -C $PENCIL_HOME rev-parse HEAD)"
 echo "----------------"
 
 #Treat all the remaining arguments as a command string and execute.
