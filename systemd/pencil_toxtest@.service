@@ -3,6 +3,7 @@ Description=Pencil-code Python module tests
 
 [Service]
 Type=oneshot
+TimeoutStartSec=12h
 StandardOutput=file:%I/report.txt
 EnvironmentFile=%I/pencil_test.conf
 

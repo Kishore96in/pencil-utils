@@ -3,6 +3,7 @@ Description=Pencil-code test (master branch)
 
 [Service]
 Type=oneshot
+TimeoutStartSec=12h
 WorkingDirectory=%I
 EnvironmentFile=%I/pencil_test.conf
 
