@@ -11,12 +11,14 @@ Options:
     -b,--branch             Branch to test.
     -c,--commit             Check out a particular commit of the target branch.
                             Default: master
+    -s,--submodules         Check out submodules as well (e.g. astaroth)
 '''
 
 #Defaults
 tmp_loc="/var/tmp/pc_env"
 branchname=master
 commit=""
+submodules="false"
 
 #The configuration file is just a shell script in which variables can be defined.
 config_file="$HOME/.config/pc_env"
@@ -28,8 +30,8 @@ fi
 #https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash/29754866#29754866
 set -o errexit -o pipefail -o noclobber -o nounset
 
-LONGOPTS=branch:,help,commit:
-OPTIONS=b:hc:
+LONGOPTS=branch:,help,commit:,submodules
+OPTIONS=b:hc:s
 
 PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@") || exit 2
 eval set -- "$PARSED"
@@ -43,6 +45,10 @@ while true; do
         -c|--commit)
             commit=$2
             shift 2
+            ;;
+        -s|--submodules)
+            submodules="true"
+            shift 1
             ;;
         -h|--help)
             echo "$help"
@@ -70,7 +76,7 @@ else
     latest_commit="$commit"
 fi
 sanitized_repo_name=$(echo $PENCIL_HOME | tr -d ':.') #remove characters which would cause problems in folder names.
-tmpdir="$tmp_loc/$USER/$sanitized_repo_name/$branchname/$latest_commit"
+tmpdir="$tmp_loc/$USER/submodules_$submodules/$sanitized_repo_name/$branchname/$latest_commit"
 
 if ! test -e "$tmpdir"; then
     git clone --depth 1 --revision "$latest_commit" file://"$PENCIL_HOME" "$tmpdir"
@@ -78,6 +84,11 @@ fi
 
 set +o nounset +o pipefail #Otherwise there are errors in sourceme.sh
 export PENCIL_HOME="$tmpdir"
+
+if test "$submodules" = "true"; then
+    git -C $PENCIL_HOME submodule update --init --recursive
+fi
+
 _sourceme_quiet=1
 source "$PENCIL_HOME"/sourceme.sh
 unset _sourceme_quiet
