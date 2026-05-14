@@ -100,4 +100,7 @@ echo -e "\tcommit: $(git -C $PENCIL_HOME rev-parse HEAD)"
 echo "----------------"
 
 #Treat all the remaining arguments as a command string and execute.
+#Braces below are to safeguard against pc_env being edited while it is running.
+{
 "$@"
+}; exit
