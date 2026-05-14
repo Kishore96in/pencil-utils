@@ -86,7 +86,7 @@ set +o nounset +o pipefail #Otherwise there are errors in sourceme.sh
 export PENCIL_HOME="$tmpdir"
 
 if test "$submodules" = "true"; then
-    git -C $PENCIL_HOME submodule update --init --recursive
+    git -C $PENCIL_HOME submodule update --init --recursive --depth 1
 fi
 
 _sourceme_quiet=1
