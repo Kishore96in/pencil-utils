@@ -73,7 +73,7 @@ else
         echo "Error: commit $commit is not contained in $branchname"
         exit 4
     fi
-    latest_commit="$commit"
+    latest_commit=$(git -C "$PENCIL_HOME" rev-parse "$commit")
 fi
 sanitized_repo_name=$(echo $PENCIL_HOME | tr -d ':.') #remove characters which would cause problems in folder names.
 tmpdir="$tmp_loc/$USER/submodules_$submodules/$sanitized_repo_name/$branchname/$latest_commit"
