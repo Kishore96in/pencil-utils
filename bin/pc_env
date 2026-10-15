@@ -79,6 +79,7 @@ sanitized_repo_name=$(echo $PENCIL_HOME | tr -d ':.') #remove characters which w
 tmpdir="$tmp_loc/$USER/submodules_$submodules/$sanitized_repo_name/$branchname/$latest_commit"
 
 if ! test -e "$tmpdir"; then
+    #TODO: --revision option is not available on git older than 2.49.
     git clone --depth 1 --revision "$latest_commit" file://"$PENCIL_HOME" "$tmpdir"
 fi
 
