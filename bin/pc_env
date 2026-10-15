@@ -94,6 +94,10 @@ if test "$submodules" = "true"; then
     git -C $PENCIL_HOME submodule update --init --recursive --depth 1
 fi
 
+if test "$_sourceme" = "set"; then
+    echo "WARNING: sourceme.sh has already been sourced in this shell; the environment may not be properly initialized"
+fi
+
 _sourceme_quiet=1
 source "$PENCIL_HOME"/sourceme.sh
 unset _sourceme_quiet
