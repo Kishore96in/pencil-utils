@@ -4,7 +4,7 @@ help='''Wrapper to run commands using a particular branch of the Pencil code. Th
 
 Example usage:
     pc_env --branch gputestv6 -- pc_run #run single command
-    pc_env --branch gputestv6 -- bash --norc #interactive shell
+    pc_env --branch gputestv6 -- bash #interactive shell
 
 Options:
     -h,--help               Show this help
